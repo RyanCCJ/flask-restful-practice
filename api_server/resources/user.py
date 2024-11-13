@@ -26,6 +26,27 @@ class User(Resource):
         return db, cursor
     
     def get(self, id):
+        """
+        獲取特定 User
+        ---
+        tags:
+          - User
+        description: 已啟動軟刪除機制
+        produces:
+          - applicaiton/json
+          - applicaiton/xml
+        parameters:
+          - in: path
+            name: id
+            type: integer
+            required: true
+        responses:
+          200:
+            description: 正確的資料
+          500:
+            description: 伺服器異常
+        """
+
         db, cursor = self.db_init()
         sql = "Select * from api.users Where id = '{}' and deleted is not True;".format(id)
         cursor.execute(sql)
@@ -34,6 +55,31 @@ class User(Resource):
         return jsonify({'data':user})
 
     def patch(self, id):
+        """
+        更新特定 User
+        ---
+        tags:
+          - User
+        description: 只能更新 name
+        produces:
+          - applicaiton/json
+          - applicaiton/xml
+        parameters:
+          - in: path
+            name: id
+            type: integer
+            required: true
+          - in: body
+            name: data
+            type: string
+            required: true
+        responses:
+          200:
+            description: 已更新
+          500:
+            description: 更新失敗
+        """
+
         # original code
         '''
         db, cursor = self.db_init()

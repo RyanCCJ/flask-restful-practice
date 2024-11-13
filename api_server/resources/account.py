@@ -20,6 +20,31 @@ class Account(Resource):
         return db, cursor
     
     def get(self, user_id, id):
+        """
+        獲取特定 Account
+        ---
+        tags:
+          - Account
+        description: 已啟動軟刪除機制
+        produces:
+          - applicaiton/json
+          - applicaiton/xml
+        parameters:
+          - in: path
+            name: id
+            type: integer
+            required: true
+          - in: path
+            name: user_id
+            type: integer
+            required: true
+        responses:
+          200:
+            description: 正確的資料
+          500:
+            description: 伺服器異常
+        """
+
         db, cursor = self.db_init()
         sql = "Select * from api.accounts Where user_id = '{}' and id = '{}' and deleted is not True;".format(user_id,id)
         cursor.execute(sql)

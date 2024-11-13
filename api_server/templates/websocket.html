@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chat Room</title>
+<meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function(){
+    var socket = io.connect()
+    socket.on('chatting', (msg) => {
+        var date = new Date()
+        $('#message').append('<p>Send: "' + msg.message + '" Time: ' + date + '</p>')
+    })
+    $('#send').on('click', () => {
+        socket.emit('chatting', {message: $('#data').val()})
+    })
+})
+</script>
+</head>
+<body>
+    <input id="data"><input type="button" id="send" value="send">
+    <div id="message"></div>
+</body>
+</html>

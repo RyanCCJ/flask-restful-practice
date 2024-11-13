@@ -1,8 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_restful import Api
 from resources.user import Users, User
 from resources.account import Accounts, Account
-from server import app
+from server import app, socketio, emit
 import pymysql
 import traceback
 import jwt
@@ -18,6 +18,19 @@ api.add_resource(Account, '/user/<user_id>/account/<id>')
 @app.route('/')
 def index():
     return "Hello World!"
+
+
+@app.route('/login')
+def login ():
+    return render_template('login.html')
+
+
+@app.route('/FB_login', methods=['POST'])
+def FB_login ():
+    userID = request.values['userID']
+    accessToken = request.values['accessToken']
+    print(userID, accessToken)
+    return 'success'
 
 
 @app.errorhandler(Exception)
@@ -91,6 +104,32 @@ def withdraw(user_id, id):
     return jsonify(response)
 
 
+@app.route('/websocket', methods=['GET'])
+def websocket():
+    return render_template('websocket.html')
+
+
+@socketio.on('connect')
+def test_connect():
+    emit('chatting', {'message':'confirm connection'})
+
+
+@socketio.on('chatting')
+def received(data):
+    print('message: ' + data['message'])
+
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    message = request.json.get('message',0)
+    print(message)
+    socketio.emit('chatting', {'message': message})
+    return 'success'
+
+ 
 if __name__ == '__main__':
-    app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    #app.debug = True
+    #app.run(host='0.0.0.0', port=5000)
+
+    # SSL
+    app.run(host='localhost', port=443, ssl_context=('ssl/localhost.crt','ssl/localhost.key'))
