@@ -1,7 +1,7 @@
 ## Flask RESTful API Practice
 
 ### Introduction
-This project is built with Flask to create a RESTful API and includes the following key features:
+This project is built with Flask to create RESTful APIs and includes the following key features:
 
 - CRUD operations with MySQL using ORM
 - Standard user authentication and verification mechanisms
